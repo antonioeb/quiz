@@ -15,11 +15,24 @@ exports.load = function(req, res, next, quizId) {
 
 // GET /quizes
 exports.index = function(req, res) {
- models.Quiz.findAll().then(
- function(quizes) {
- res.render('quizes/index', { quizes: quizes});
+ //Comprobamos si existe el parametro "search" en la peticion
+ if(typeof(req.query.search) !== "undefined"){
+ //Si existe, indica que el usuario ha usado el buscador de preguntas
+   //Añadimos % al principio y final del texto a buscar
+   var search='%'+req.query.search+'%';
+   //Reemplazamos espacios en blanco por %
+   search=search.replace(/ /g, '%');
+   //Realizamos la busqueda ordenada alfabeticamente
+   models.Quiz.findAll({where: ["pregunta like ?", search], order:'pregunta ASC'}).then(function(quizes){
+     res.render('quizes/index',{quizes: quizes});
+   }).catch(function(error){next(error);})
  }
- ).catch(function(error) { next(error);})
+ else{
+  models.Quiz.findAll().then(function(quizes) {
+    res.render('quizes/index', { quizes: quizes});
+    }
+  ).catch(function(error) { next(error);})
+ }
 };
 
 

@@ -4,7 +4,6 @@
  <% } %>
  </table>
 
-<br/>
 <form method="get" action="/quizes">
  Introduzca el texto a buscar: <p>
  <input type="text" name="search" value="buscar"/>
