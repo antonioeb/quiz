@@ -27,6 +27,28 @@ app.use(session());
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+// middleware de autologout de sesion
+app.use(function(req, res, next) {
+ //Comprobamos si el usuario ha iniciado sesion
+ if(req.session.user){
+ //Si no existe la variable que lleva el tiempo de sesion, la seteamos por primera vez
+ if(!req.session.user.tiempoSesion){
+ req.session.user.tiempoSesion=(new Date()).getTime();
+ }else{
+ //Si se ha sobrepasado los dos minutos sin actividad, cerramos sesion 
+ if((new Date()).getTime()-req.session.user.tiempoSesion > 120000){
+ delete req.session.user;
+ //En caso contrario, no se ha superado la inactividad durante dos minutos y se resetea la marca del tiempo
+ }else{
+ req.session.user.tiempoSesion=(new Date()).getTime();
+ }
+ }
+ }
+ next();
+});
+
+
 // Helpers dinamicos:
 app.use(function(req, res, next) {
 
