@@ -1,0 +1,26 @@
+<h1>Estadísticas del juego</h1>
+<% var num_comentarios=0, preguntas_con_comentarios=0; %>
+<%for(i=0; i<quizes.length; i++)
+ //Comprobamos si la pregunta tiene comentarios
+ if(quizes[i].Comments){
+   pregunta_actual_con_comentario=false;
+   //recorremos los comentarios de la pregunta
+   for(j=0 ;j<quizes[i].Comments.length;j++)
+     if(quizes[i].Comments[j].publicado){
+        num_comentarios++;
+        pregunta_actual_con_comentario=true;
+      }
+   if(pregunta_actual_con_comentario==true)
+   	preguntas_con_comentarios++;
+ }
+%>
+
+
+
+ <table>
+ <tr><td>Número de preguntas:</td><td><%= quizes.length %></td></tr>
+ <tr><td>Número de comentarios totales:</td><td><%= num_comentarios %></td></tr>
+ <tr><td>Número medio de comentarios por pregunta:</td><td><%= num_comentarios/quizes.length %></td></tr>
+ <tr><td>Número de preguntas sin comentarios:</td><td><%= quizes.length-preguntas_con_comentarios %></td></tr>
+ <tr><td>Número de preguntas con comentarios:</td><td><%= preguntas_con_comentarios %></td></tr>
+ </table>
